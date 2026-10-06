@@ -1,117 +1,159 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { 
   ArrowRight, 
   Check, 
   Menu, 
   X, 
+  ChevronLeft,
   ChevronRight, 
   Phone, 
   Instagram, 
   Mail, 
   Maximize2, 
   MapPin, 
-  Sparkles, 
-  Layers, 
   CheckCircle,
-  Eye,
   Info
 } from 'lucide-react';
 
-// Design Archive Images configuration mapping the 11 uploaded files
-const ARCHIVE_IMAGES = [
+type ProjectCategory = 'doors' | 'furniture' | 'interior';
+
+type PortfolioProject = {
+  title: string;
+  image: string;
+  category: ProjectCategory;
+  categoryLabel: string;
+  description: string;
+  orientation: 'portrait' | 'landscape';
+};
+
+const PORTFOLIO_PROJECTS: PortfolioProject[] = [
   {
-    id: 0,
-    path: '/input_file_0.png',
-    title: 'Section 1: Hero Studio Mockup',
-    description: 'The editorial visual signature layout. Crafting Furniture. Transforming Spaces. Featuring the iconic terracotta modular sofa rendering.',
-    category: 'Layout Blueprint'
+    title: 'The Geometric Entryway',
+    image: '/projects/geometric-entryway.png',
+    category: 'doors',
+    categoryLabel: 'Bespoke doors',
+    description: 'A charcoal entry door detailed with warm timber inlays and crisp geometric lines.',
+    orientation: 'portrait'
   },
   {
-    id: 1,
-    path: '/input_file_1.png',
-    title: 'Section 2: Brand Introduction Mockup',
-    description: 'Where Craft Meets Space. Deep-dive typography explaining the design ethos of paying attention.',
-    category: 'Layout Blueprint'
+    title: 'A Softer Living Room',
+    image: '/projects/living-room-seating.png',
+    category: 'furniture',
+    categoryLabel: 'Furniture',
+    description: 'Deep, tailored seating paired with warm wood accents and a statement centre table.',
+    orientation: 'portrait'
   },
   {
-    id: 2,
-    path: '/input_file_2.png',
-    title: 'Section 3: Capabilities Directory',
-    description: 'Detailed service hierarchy showing furniture production, interior design, bespoke pieces, turnkey styling, and space consultation.',
-    category: 'Capabilities Design'
+    title: 'The Colour-Led Bedroom',
+    image: '/projects/statement-bedroom.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'A dramatic bedroom composition with layered upholstery, wall panels and expressive lighting.',
+    orientation: 'portrait'
   },
   {
-    id: 3,
-    path: '/input_file_3.png',
-    title: 'Section 4: Selected Work Portfolio',
-    description: 'Selected Work card layout featuring: The Soft Structure, The Grounded Room, and The Finishing Layer.',
-    category: 'Portfolio Blueprint'
+    title: 'The Brightline Kitchen',
+    image: '/projects/white-kitchen.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'Clean white cabinetry, integrated appliances and a light, easy-to-work-in layout.',
+    orientation: 'portrait'
   },
   {
-    id: 4,
-    path: '/input_file_4.png',
-    title: 'Section 5: Studio Quote Banner',
-    description: 'Dark-green quote panel: "A space can be practical and still have a point of view." set against signature typography.',
-    category: 'Brand Statement'
+    title: 'The Sculptural Side Table',
+    image: '/projects/sculptural-accent-table.png',
+    category: 'furniture',
+    categoryLabel: 'Furniture',
+    description: 'A dark, curved support gives this two-tier occasional table its distinctive silhouette.',
+    orientation: 'portrait'
   },
   {
-    id: 5,
-    path: '/input_file_5.png',
-    title: 'Section 6: Craft & Making Process',
-    description: 'Process roadmap (01 Brief, 02 Direction, 03 Real, 04 Scene) detailing how furniture moves from paper to physical form.',
-    category: 'Process Design'
+    title: 'Wardrobe and Dressing Vanity',
+    image: '/projects/wardrobe-vanity.png',
+    category: 'furniture',
+    categoryLabel: 'Furniture',
+    description: 'Full-height wardrobe storage joined to a streamlined dressing area and mirror.',
+    orientation: 'portrait'
   },
   {
-    id: 6,
-    path: '/input_file_6.png',
-    title: 'Section 7: About the Maker Mockup',
-    description: 'Introducing Toriora Kofoworola, the certified female furniture maker, personal craftsmanship and builder details.',
-    category: 'Biography Blueprint'
+    title: 'A Media Wall Made to Gather Around',
+    image: '/projects/media-wall-display.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'A full-width entertainment wall with display niches, textured panels and integrated lighting.',
+    orientation: 'landscape'
   },
   {
-    id: 7,
-    path: '/input_file_7.png',
-    title: 'Section 8: Contact Form Design',
-    description: 'Bespoke dark forest charcoal conversation portal. "Tell us what the space needs." formatted with minimal underline fields.',
-    category: 'Form Design'
+    title: 'The Warm Neutral Kitchen',
+    image: '/projects/warm-kitchen.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'A practical L-shaped kitchen softened with warm neutral finishes and generous work surfaces.',
+    orientation: 'portrait'
   },
   {
-    id: 8,
-    path: '/input_file_8.png',
-    title: 'Real Project: Asymmetric Geometric Door',
-    description: 'Completed premium project by The 411Designs. Features dark charcoal satin-painted panels perfectly offset with natural warm oak grain inserts.',
-    category: 'Completed Work'
+    title: 'The Textured Media Wall',
+    image: '/projects/textured-media-wall.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'Fluted detailing, a marble-look centre panel and concealed warm lighting frame the screen.',
+    orientation: 'portrait'
   },
   {
-    id: 9,
-    path: '/411designs-logo.svg',
-    title: 'The 411Designs Logo (Green Studio Spec)',
-    description: 'Official brand mark watermark containing architectural lines, structural geometry, and green tones.',
-    category: 'Brand Logo'
+    title: 'The Backlit Feature Wall',
+    image: '/projects/backlit-feature-wall.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'Marble-look panels and vertical slats are brought together with a measured line of light.',
+    orientation: 'landscape'
   },
   {
-    id: 10,
-    path: '/411designs-logo.svg',
-    title: 'The 411Designs Logo (Bronze Luxury Spec)',
-    description: 'Official luxury spec logo in warm gold/bronze. Used for the favicon, watermarks, and high-end print representations.',
-    category: 'Brand Logo'
+    title: 'The Layered Timber Coffee Table',
+    image: '/projects/timber-coffee-table.png',
+    category: 'furniture',
+    categoryLabel: 'Furniture',
+    description: 'A timber storage base sits beneath an offset top for a strong, functional centrepiece.',
+    orientation: 'portrait'
+  },
+  {
+    title: 'A Light-Filled Family Lounge',
+    image: '/projects/light-filled-lounge.png',
+    category: 'interior',
+    categoryLabel: 'Interiors',
+    description: 'A calm living space anchored by a made-to-measure media wall and considered finishes.',
+    orientation: 'portrait'
   }
 ];
 
 export default function App() {
-  const [viewMode, setViewMode] = useState<'showroom' | 'archives'>('showroom');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
-  // Interactive Before & After state
-  const [beforeAfterSliderPos, setBeforeAfterSliderPos] = useState(50);
-  
   // Selected project category filter
-  const [activeProjectFilter, setActiveProjectFilter] = useState<'all' | 'furniture' | 'interior' | 'doors'>('all');
+  const [activeProjectFilter, setActiveProjectFilter] = useState<'all' | ProjectCategory>('all');
+  const [spatialProjectIndex, setSpatialProjectIndex] = useState(0);
   
   // Interactive Lightbox state
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const [lightboxTitle, setLightboxTitle] = useState('');
   const [lightboxDesc, setLightboxDesc] = useState('');
+  const lightboxCloseButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!lightboxImage) return;
+
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setLightboxImage(null);
+    };
+
+    window.addEventListener('keydown', closeOnEscape);
+    lightboxCloseButtonRef.current?.focus();
+
+    return () => {
+      window.removeEventListener('keydown', closeOnEscape);
+      previouslyFocused?.focus();
+    };
+  }, [lightboxImage]);
 
   // Contact form submission state
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -161,7 +203,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
           {/* Zone 1: Single element brand wordmark */}
-          <a href="#" onClick={() => setViewMode('showroom')} className="flex items-center gap-3 group focus:outline-none">
+          <a href="#" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 group focus:outline-none">
             <img src="/411designs-logo.svg" alt="The 411Designs" className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
           </a>
 
@@ -188,6 +230,7 @@ export default function App() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)} 
               className="md:hidden p-2 text-[#1C1B19] focus:outline-none"
               aria-label="Toggle menu"
+              aria-expanded={mobileMenuOpen}
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -196,7 +239,7 @@ export default function App() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-[#F7F5F0] border-b border-[#E4E2DC] shadow-lg py-6 px-6 animate-fade-in">
+          <div id="mobile-navigation" className="md:hidden absolute top-full left-0 w-full bg-[#F7F5F0] border-b border-[#E4E2DC] shadow-lg py-6 px-6 animate-fade-in">
             <div className="flex flex-col gap-5 text-base font-sans-premium font-semibold">
               <a href="#studio" onClick={() => setMobileMenuOpen(false)} className="text-[#1C1B19] hover:text-[#E05A36]">Studio</a>
               <a href="#capabilities" onClick={() => setMobileMenuOpen(false)} className="text-[#1C1B19] hover:text-[#E05A36]">Capabilities</a>
@@ -204,25 +247,6 @@ export default function App() {
               <a href="#process" onClick={() => setMobileMenuOpen(false)} className="text-[#1C1B19] hover:text-[#E05A36]">Process</a>
               <a href="#about" onClick={() => setMobileMenuOpen(false)} className="text-[#1C1B19] hover:text-[#E05A36]">About the Maker</a>
               
-              <hr className="border-[#E4E2DC] my-1" />
-              
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-[#9C9A94]">Viewing Mode</span>
-                <div className="grid grid-cols-2 gap-2 bg-[#EBE9E2] p-1 rounded">
-                  <button 
-                    onClick={() => { setViewMode('showroom'); setMobileMenuOpen(false); }}
-                    className={`py-2 text-xs rounded font-bold transition-all ${viewMode === 'showroom' ? 'bg-white text-black shadow-sm' : 'text-[#7C7A74]'}`}
-                  >
-                    Showroom
-                  </button>
-                  <button 
-                    onClick={() => { setViewMode('archives'); setMobileMenuOpen(false); }}
-                    className={`py-2 text-xs rounded font-bold transition-all ${viewMode === 'archives' ? 'bg-white text-black shadow-sm' : 'text-[#7C7A74]'}`}
-                  >
-                    Mockups ({ARCHIVE_IMAGES.length})
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
         )}
@@ -231,11 +255,7 @@ export default function App() {
       {/* 2. Main Content Body */}
       <main className="flex-grow">
         
-        {/* ======================================= */}
-        {/* VIEW 1: THE INTERACTIVE SHOWROOM VIEW    */}
-        {/* ======================================= */}
-        {viewMode === 'showroom' && (
-          <div className="space-y-0 animate-fade-in">
+        <div className="space-y-0 animate-fade-in">
             
             {/* HERO SECTION */}
             <section className="relative overflow-hidden bg-[#F7F5F0] py-16 lg:py-24 border-b border-[#E4E2DC]">
@@ -381,11 +401,11 @@ export default function App() {
                   {/* Brand Logo Spec Image Block */}
                   <div className="lg:col-span-4">
                     <div className="relative group rounded border border-[#E4E2DC] overflow-hidden bg-[#101914] p-6 shadow-md aspect-[4/3] flex flex-col justify-between">
-                      <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Official Green Studio Spec</span>
+                      <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Bronze Studio Signature</span>
                       <div className="h-28 w-full flex items-center justify-center">
                         <img 
                           src="/411designs-logo.svg"
-                          alt="The 411Designs Green Logo" 
+                          alt="The 411Designs Bronze Logo"
                           className="h-full w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform duration-700"
                         />
                       </div>
@@ -555,24 +575,28 @@ export default function App() {
                   <div className="flex flex-wrap gap-2 text-xs font-sans-premium font-semibold">
                     <button 
                       onClick={() => setActiveProjectFilter('all')}
+                      aria-pressed={activeProjectFilter === 'all'}
                       className={`px-4 py-2 rounded transition-all ${activeProjectFilter === 'all' ? 'bg-[#1C1B19] text-white' : 'bg-transparent text-[#7C7A74] hover:text-[#1C1B19]'}`}
                     >
                       All Work
                     </button>
                     <button 
                       onClick={() => setActiveProjectFilter('doors')}
+                      aria-pressed={activeProjectFilter === 'doors'}
                       className={`px-4 py-2 rounded transition-all ${activeProjectFilter === 'doors' ? 'bg-[#1C1B19] text-white' : 'bg-transparent text-[#7C7A74] hover:text-[#1C1B19]'}`}
                     >
                       Bespoke Doors (Real Build)
                     </button>
                     <button 
                       onClick={() => setActiveProjectFilter('furniture')}
+                      aria-pressed={activeProjectFilter === 'furniture'}
                       className={`px-4 py-2 rounded transition-all ${activeProjectFilter === 'furniture' ? 'bg-[#1C1B19] text-white' : 'bg-transparent text-[#7C7A74] hover:text-[#1C1B19]'}`}
                     >
                       Furniture Production
                     </button>
                     <button 
                       onClick={() => setActiveProjectFilter('interior')}
+                      aria-pressed={activeProjectFilter === 'interior'}
                       className={`px-4 py-2 rounded transition-all ${activeProjectFilter === 'interior' ? 'bg-[#1C1B19] text-white' : 'bg-transparent text-[#7C7A74] hover:text-[#1C1B19]'}`}
                     >
                       Interior Design
@@ -581,239 +605,132 @@ export default function App() {
                 </div>
 
                 {/* Portfolio Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                  
-                  {/* REAL COMPLETED PROJECT: THE GEOMETRIC DOOR (Using real input_file_8.png) */}
-                  {(activeProjectFilter === 'all' || activeProjectFilter === 'doors') && (
-                    <div className="group relative bg-white border border-[#E4E2DC] rounded overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-fade-in">
-                      <div className="aspect-[3/4] w-full bg-[#EBE9E2] relative overflow-hidden">
-                        <img 
-                          src="/input_file_8.png" 
-                          alt="Bespoke Geometric Entryway Panel Door" 
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        />
-                        <div className="absolute top-4 left-4 bg-[#E05A36] text-white text-[10px] uppercase font-sans-premium font-bold tracking-widest px-2 py-1 rounded">
-                          REAL COMPLETED PORTFOLIO
-                        </div>
-                        <button 
-                          onClick={() => openLightbox('/input_file_8.png', 'The Geometric Entryway', 'A masterful physical execution by Toriora Kofoworola. Bespoke internal structural door combining custom-stained warm walnut elements alongside architectural matte-charcoal panels.')}
-                          className="absolute bottom-4 right-4 bg-white/95 hover:bg-white p-2.5 rounded-full shadow-lg text-black hover:text-[#E05A36] transition-colors focus:outline-none"
-                        >
-                          <Maximize2 className="h-4 w-4" />
-                        </button>
-                      </div>
-                      <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-xs text-[#7C7A74] font-sans-premium">
-                            <span>Bespoke Doors</span>
-                            <span>·</span>
-                            <span>Completed Build</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-5 gap-y-9 md:gap-x-7 md:gap-y-12">
+                  {PORTFOLIO_PROJECTS
+                    .filter((project) => activeProjectFilter === 'all' || project.category === activeProjectFilter)
+                    .map((project) => (
+                      <article key={project.image} className="group min-w-0 animate-fade-in">
+                        <div className={`relative overflow-hidden bg-[#EBE9E2] ${project.orientation === 'landscape' ? 'aspect-[4/3]' : 'aspect-[3/4]'}`}>
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            loading="lazy"
+                            decoding="async"
+                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                          />
+                          <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-3 bg-gradient-to-t from-black/65 to-transparent p-4 pt-12">
+                            <span className="text-[10px] font-sans-premium font-bold uppercase tracking-widest text-white">
+                              {project.categoryLabel}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => openLightbox(project.image, project.title, project.description)}
+                              aria-label={`View ${project.title} image`}
+                              title={`View ${project.title}`}
+                              className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white text-[#1C1B19] shadow transition-colors hover:bg-[#E05A36] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                            >
+                              <Maximize2 className="h-4 w-4" />
+                            </button>
                           </div>
-                          <h3 className="font-editorial text-2xl font-bold text-[#1C1B19] group-hover:text-[#E05A36] transition-colors">
-                            The Geometric Entryway
+                        </div>
+                        <div className="space-y-2 pt-4">
+                          <p className="text-[10px] font-sans-premium font-bold uppercase tracking-widest text-[#E05A36]">
+                            {project.categoryLabel}
+                          </p>
+                          <h3 className="font-editorial text-xl font-bold text-[#1C1B19] transition-colors group-hover:text-[#E05A36] md:text-2xl">
+                            {project.title}
                           </h3>
-                          <p className="text-xs font-sans-premium text-[#5C5A54] leading-relaxed">
-                            A stunning statement door showcasing asymmetric geometric joinery. Stained premium oak timber inserts are highlighted by structured charcoal paint fields. Designed and fabricated entirely in our studio.
+                          <p className="max-w-prose text-sm leading-relaxed text-[#5C5A54]">
+                            {project.description}
                           </p>
                         </div>
-                        <div className="pt-4 border-t border-[#EBEBE5] flex items-center justify-between text-xs font-sans-premium">
-                          <span className="font-bold text-[#1C1B19]">Lagos, Nigeria</span>
-                          <span className="text-[#E05A36] font-bold">100% Handcrafted</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* PROJECT 2: THE SOFT STRUCTURE (From Blueprint Study 01) */}
-                  {(activeProjectFilter === 'all' || activeProjectFilter === 'furniture') && (
-                    <div className="group relative bg-white border border-[#E4E2DC] rounded overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-fade-in">
-                      <div className="aspect-[3/4] w-full bg-[#E5DCC5] relative overflow-hidden flex items-center justify-center p-8">
-                        <div className="absolute inset-0 bg-[#D76747]/10 flex flex-col items-center justify-center p-6 text-center">
-                          <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center mb-4 text-[#D76747] font-serif font-bold italic text-3xl shadow">01</div>
-                          <p className="font-editorial text-lg italic text-[#1C1B19] font-medium leading-tight">"A study in upholstered volume, low lines & quiet confidence."</p>
-                        </div>
-                        <div className="absolute top-4 left-4 bg-black/80 text-white text-[10px] uppercase font-sans-premium font-bold tracking-widest px-2 py-1 rounded">
-                          MATERIAL STUDY / 01
-                        </div>
-                      </div>
-                      <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-xs text-[#7C7A74] font-sans-premium">
-                            <span>Furniture Production</span>
-                            <span>·</span>
-                            <span>Upholstery Spec</span>
-                          </div>
-                          <h3 className="font-editorial text-2xl font-bold text-[#1C1B19]">
-                            The Soft Structure
-                          </h3>
-                          <p className="text-xs font-sans-premium text-[#5C5A54] leading-relaxed">
-                            Bespoke low-alignment seating conceptualized around raw geometric shapes. Formulated with performance linen fabrics, high-density foam filling, and hand-milled interior internal frame support.
-                          </p>
-                        </div>
-                        <div className="pt-4 border-t border-[#EBEBE5] flex items-center justify-between text-xs font-sans-premium">
-                          <span className="font-bold text-[#1C1B19]">Studio Concept</span>
-                          <span className="text-[#9C9A94]">Ready to manufacture</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* PROJECT 3: THE GROUNDED ROOM (From Blueprint Study 02) */}
-                  {(activeProjectFilter === 'all' || activeProjectFilter === 'interior') && (
-                    <div className="group relative bg-white border border-[#E4E2DC] rounded overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-fade-in">
-                      <div className="aspect-[3/4] w-full bg-[#DEC5A0] relative overflow-hidden flex items-center justify-center p-8">
-                        <div className="absolute inset-0 bg-[#CD954F]/10 flex flex-col items-center justify-center p-6 text-center">
-                          <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center mb-4 text-[#CD954F] font-serif font-bold italic text-3xl shadow">02</div>
-                          <p className="font-editorial text-lg italic text-[#1C1B19] font-medium leading-tight">"Warm timber, strong geometry and a little breathing space."</p>
-                        </div>
-                        <div className="absolute top-4 left-4 bg-black/80 text-white text-[10px] uppercase font-sans-premium font-bold tracking-widest px-2 py-1 rounded">
-                          MATERIAL STUDY / 02
-                        </div>
-                      </div>
-                      <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-xs text-[#7C7A74] font-sans-premium">
-                            <span>Interior Design</span>
-                            <span>·</span>
-                            <span>Spatial Layout</span>
-                          </div>
-                          <h3 className="font-editorial text-2xl font-bold text-[#1C1B19]">
-                            The Grounded Room
-                          </h3>
-                          <p className="text-xs font-sans-premium text-[#5C5A54] leading-relaxed">
-                            A spatial direction pairing warm, raw teakwood structures with airy layout paths. Crafted for modern open residential floor plans requiring structural weight and natural, rustic balance.
-                          </p>
-                        </div>
-                        <div className="pt-4 border-t border-[#EBEBE5] flex items-center justify-between text-xs font-sans-premium">
-                          <span className="font-bold text-[#1C1B19]">Residential Concept</span>
-                          <span className="text-[#9C9A94]">Ready to transform</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* PROJECT 4: THE FINISHING LAYER (From Blueprint Study 03) */}
-                  {(activeProjectFilter === 'all' || activeProjectFilter === 'furniture') && (
-                    <div className="group relative bg-white border border-[#E4E2DC] rounded overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col h-full animate-fade-in">
-                      <div className="aspect-[3/4] w-full bg-[#C2C0D4] relative overflow-hidden flex items-center justify-center p-8">
-                        <div className="absolute inset-0 bg-[#6C639D]/10 flex flex-col items-center justify-center p-6 text-center">
-                          <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center mb-4 text-[#6C639D] font-serif font-bold italic text-3xl shadow">03</div>
-                          <p className="font-editorial text-lg italic text-[#1C1B19] font-medium leading-tight">"Texture, light and small decisions turning anywhere into home."</p>
-                        </div>
-                        <div className="absolute top-4 left-4 bg-black/80 text-white text-[10px] uppercase font-sans-premium font-bold tracking-widest px-2 py-1 rounded">
-                          MATERIAL STUDY / 03
-                        </div>
-                      </div>
-                      <div className="p-6 flex-grow flex flex-col justify-between space-y-4">
-                        <div className="space-y-2">
-                          <div className="flex items-center gap-2 text-xs text-[#7C7A74] font-sans-premium">
-                            <span>Turnkey Styling</span>
-                            <span>·</span>
-                            <span>Accents & Lighting</span>
-                          </div>
-                          <h3 className="font-editorial text-2xl font-bold text-[#1C1B19]">
-                            The Finishing Layer
-                          </h3>
-                          <p className="text-xs font-sans-premium text-[#5C5A54] leading-relaxed">
-                            The critical details: coordinating ambient warm sconces, rich textile layers, and personalized accessory placements that bring raw physical spaces into fully resolved habitation.
-                          </p>
-                        </div>
-                        <div className="pt-4 border-t border-[#EBEBE5] flex items-center justify-between text-xs font-sans-premium">
-                          <span className="font-bold text-[#1C1B19]">Curation Casing</span>
-                          <span className="text-[#9C9A94]">Ready to style</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
+                      </article>
+                    ))}
                 </div>
 
               </div>
             </section>
 
-            {/* SECTION 5: BEFORE & AFTER TRANSFORMATION */}
+            {/* SECTION 5: SPATIAL REVELATION PROJECT CAROUSEL */}
             <section className="py-24 bg-[#F7F5F0] border-b border-[#E4E2DC]">
               <div className="max-w-7xl mx-auto px-4 md:px-12">
-                
-                {/* Header */}
-                <div className="max-w-xl mb-16 space-y-4">
+                <div className="max-w-2xl mb-10 space-y-4">
                   <span className="text-xs font-bold uppercase tracking-wider text-[#E05A36]">04 SPATIAL REVELATION</span>
-                  <h2 className="font-editorial text-4xl md:text-5xl font-bold text-[#1C1B19] tracking-tight">
+                  <h2 id="spatial-revelation-title" className="font-editorial text-4xl md:text-5xl font-bold text-[#1C1B19] tracking-tight">
                     See the Transformation.
                   </h2>
                   <p className="font-sans-premium text-sm text-[#5C5A54] leading-relaxed">
-                    Good carpentry transforms rooms. Explore how standard white wall entrances are completely reimagined into our high-profile custom-paneled geometric timber entryway. Drag the slider below to compare before and after.
+                    Explore completed furniture and interiors, from bespoke timber details to considered rooms made for everyday living.
                   </p>
                 </div>
 
-                {/* Interactive Drag Before / After Comparison Slider */}
-                <div className="max-w-3xl mx-auto">
-                  <div className="relative aspect-[4/5] md:aspect-[4/3] w-full rounded-lg overflow-hidden border border-[#E4E2DC] shadow-lg select-none">
-                    
-                    {/* AFTER STATE (The real completed geometric door /input_file_8.png) */}
-                    <div className="absolute inset-0 bg-white">
-                      <img 
-                        src="/input_file_8.png" 
-                        alt="Completed Custom Geometric Door" 
-                        className="absolute inset-0 h-full w-full object-cover"
-                      />
-                      <div className="absolute bottom-6 right-6 bg-black/85 text-white text-xs font-sans-premium font-bold tracking-widest px-3 py-1.5 rounded shadow z-10">
-                        AFTER: Bespoke Crafted Door
-                      </div>
-                    </div>
-
-                    {/* BEFORE STATE (Plain white wall/empty door sketch - clipped by state) */}
-                    <div 
-                      className="absolute inset-0 border-r-2 border-white/80 overflow-hidden"
-                      style={{ width: `${beforeAfterSliderPos}%` }}
-                    >
-                      {/* Before Content: A representation of a simple generic door or original space */}
-                      <div className="absolute inset-0 h-full bg-[#1C1B19] flex flex-col items-center justify-center p-8 text-center" style={{ width: '100%', minWidth: '320px' }}>
-                        <div className="absolute inset-0 bg-black opacity-30"></div>
-                        <div className="relative z-10 max-w-xs space-y-3">
-                          <span className="text-[10px] text-white/50 uppercase font-sans-premium font-bold tracking-widest">Original Space</span>
-                          <h3 className="font-editorial text-3xl font-bold text-white leading-tight">Plain Entrance</h3>
-                          <div className="h-40 w-32 mx-auto bg-white/5 rounded border border-white/20 flex items-center justify-center">
-                            <span className="text-[9px] text-white/40 tracking-widest uppercase text-center px-2">Standard Contractor Door</span>
-                          </div>
-                          <p className="text-xs text-white/60">
-                            Cold, non-descript white hollow-core door lacking security, thermal mass, or artistic presence.
-                          </p>
-                        </div>
-                        <div className="absolute bottom-6 left-6 bg-white/20 text-white text-xs font-sans-premium font-bold tracking-widest px-3 py-1.5 rounded backdrop-blur">
-                          BEFORE: Standard Portal
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Drag Input Control Slider */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="100" 
-                        value={beforeAfterSliderPos} 
-                        onChange={(e) => setBeforeAfterSliderPos(Number(e.target.value))}
-                        className="absolute w-full h-full opacity-0 cursor-ew-resize z-20"
-                        aria-label="Before and after adjustment"
-                      />
-                      
-                      {/* Visually stunning slider handle */}
-                      <div 
-                        className="absolute top-0 bottom-0 w-1 bg-white cursor-pointer pointer-events-none"
-                        style={{ left: `${beforeAfterSliderPos}%` }}
+                <div
+                  className="grid overflow-hidden border border-[#E4E2DC] bg-white lg:grid-cols-[minmax(0,1.5fr)_minmax(18rem,0.8fr)]"
+                  role="region"
+                  aria-roledescription="carousel"
+                  aria-labelledby="spatial-revelation-title"
+                >
+                  <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-[#101914] sm:aspect-[16/10] lg:aspect-auto lg:min-h-[520px]">
+                    <img
+                      key={PORTFOLIO_PROJECTS[spatialProjectIndex].image}
+                      src={PORTFOLIO_PROJECTS[spatialProjectIndex].image}
+                      alt={PORTFOLIO_PROJECTS[spatialProjectIndex].title}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-contain animate-fade-in"
+                    />
+                    <div className="absolute inset-x-3 top-1/2 flex -translate-y-1/2 justify-between sm:inset-x-5">
+                      <button
+                        type="button"
+                        onClick={() => setSpatialProjectIndex((spatialProjectIndex - 1 + PORTFOLIO_PROJECTS.length) % PORTFOLIO_PROJECTS.length)}
+                        aria-label="Previous project"
+                        title="Previous project"
+                        className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#1C1B19] shadow-lg transition-colors hover:bg-[#E05A36] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                       >
-                        <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-10 w-10 bg-[#E05A36] border-2 border-white rounded-full flex items-center justify-center shadow-xl">
-                          <span className="text-white text-[10px] font-bold">↔</span>
-                        </div>
+                        <ChevronLeft className="h-5 w-5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setSpatialProjectIndex((spatialProjectIndex + 1) % PORTFOLIO_PROJECTS.length)}
+                        aria-label="Next project"
+                        title="Next project"
+                        className="grid h-11 w-11 place-items-center rounded-full bg-white text-[#1C1B19] shadow-lg transition-colors hover:bg-[#E05A36] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        <ChevronRight className="h-5 w-5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-between gap-8 p-6 sm:p-8 lg:p-10">
+                    <div className="space-y-5" aria-live="polite" aria-atomic="true">
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-[10px] font-sans-premium font-bold uppercase tracking-widest text-[#E05A36]">
+                          {PORTFOLIO_PROJECTS[spatialProjectIndex].categoryLabel}
+                        </span>
+                        <span className="shrink-0 text-xs font-sans-premium font-semibold tabular-nums text-[#7C7A74]">
+                          {String(spatialProjectIndex + 1).padStart(2, '0')} / {String(PORTFOLIO_PROJECTS.length).padStart(2, '0')}
+                        </span>
                       </div>
+                      <h3 className="font-editorial text-3xl font-bold leading-tight text-[#1C1B19] sm:text-4xl">
+                        {PORTFOLIO_PROJECTS[spatialProjectIndex].title}
+                      </h3>
+                      <p className="max-w-prose text-sm leading-relaxed text-[#5C5A54]">
+                        {PORTFOLIO_PROJECTS[spatialProjectIndex].description}
+                      </p>
                     </div>
 
-                  </div>
-                  <div className="mt-4 flex items-center justify-between text-xs font-sans-premium text-[#7C7A74] px-2">
-                    <span>← Slide Left (Reveal Custom Door)</span>
-                    <span className="text-center font-bold text-[#1C1B19]">Asymmetric Panel Transformation Study</span>
-                    <span>Slide Right (Reveal Before State) →</span>
+                    <div className="flex flex-wrap gap-2" aria-label="Choose a project">
+                      {PORTFOLIO_PROJECTS.map((project, index) => (
+                        <button
+                          key={project.image}
+                          type="button"
+                          onClick={() => setSpatialProjectIndex(index)}
+                          aria-label={`Show project ${index + 1}: ${project.title}`}
+                          aria-current={spatialProjectIndex === index ? 'true' : undefined}
+                          className={`h-2.5 rounded-full transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E05A36] ${spatialProjectIndex === index ? 'w-8 bg-[#E05A36]' : 'w-2.5 bg-[#D5D3CC] hover:bg-[#7C7A74]'}`}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -943,7 +860,7 @@ export default function App() {
               <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
                   
-                  {/* Left Column: Elegant terracotta card as styled in mockup /input_file_6.png */}
+                  {/* Left Column: Studio introduction */}
                   <div className="lg:col-span-5">
                     <div className="bg-[#E05A36] text-white p-10 md:p-12 rounded-sm shadow-md relative overflow-hidden aspect-square flex flex-col justify-between">
                       {/* Top logo identifier */}
@@ -1005,7 +922,7 @@ export default function App() {
             </section>
 
             {/* SECTION 8: CLIENT REVIEWS */}
-            <section className="py-24 bg-[#F7F5F0] border-b border-[#E4E2DC]">
+              <section className="py-24 bg-[#F7F5F0] border-b border-[#E4E2DC]">
               <div className="max-w-7xl mx-auto px-4 md:px-12">
                 
                 {/* Title */}
@@ -1141,7 +1058,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Right Column Interactive Form (Formatted like Mockup 8 - /input_file_7.png) */}
+                  {/* Right Column: Project enquiry form */}
                 <div className="lg:col-span-7">
                   <div className="bg-[#18261F] p-8 md:p-10 rounded border border-white/10 shadow-xl">
                     
@@ -1176,8 +1093,9 @@ export default function App() {
                         
                         {/* Name Field */}
                         <div className="space-y-2">
-                          <label className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">YOUR NAME</label>
+                          <label htmlFor="contact-name" className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">YOUR NAME</label>
                           <input 
+                            id="contact-name"
                             type="text" 
                             name="name"
                             required
@@ -1190,8 +1108,9 @@ export default function App() {
 
                         {/* Contact Field */}
                         <div className="space-y-2">
-                          <label className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">PHONE OR EMAIL</label>
+                          <label htmlFor="contact-method" className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">PHONE OR EMAIL</label>
                           <input 
+                            id="contact-method"
                             type="text" 
                             name="contact"
                             required
@@ -1204,8 +1123,9 @@ export default function App() {
 
                         {/* Service Requirement Dropdown */}
                         <div className="space-y-2">
-                          <label className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">WHAT DO YOU NEED?</label>
+                          <label htmlFor="contact-service" className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">WHAT DO YOU NEED?</label>
                           <select 
+                            id="contact-service"
                             name="service"
                             value={formData.service}
                             onChange={handleFormChange}
@@ -1221,8 +1141,9 @@ export default function App() {
 
                         {/* Details Field */}
                         <div className="space-y-2">
-                          <label className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">TELL US A LITTLE ABOUT IT</label>
+                          <label htmlFor="contact-details" className="text-[10px] uppercase tracking-widest font-bold text-[#E05A36]">TELL US A LITTLE ABOUT IT</label>
                           <textarea 
+                            id="contact-details"
                             name="details"
                             rows={3}
                             value={formData.details}
@@ -1232,7 +1153,7 @@ export default function App() {
                           />
                         </div>
 
-                        {/* Submit button (Styled exactly like mockup 'SEND ENQUIRY') */}
+                        {/* Submit button */}
                         <div className="pt-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
                           <button 
                             type="submit" 
@@ -1251,85 +1172,26 @@ export default function App() {
               </div>
             </section>
 
-          </div>
-        )}
-
-        {/* ======================================= */}
-        {/* VIEW 2: THE BRAND DESIGN ARCHIVES VIEW   */}
-        {/* ======================================= */}
-        {viewMode === 'archives' && (
-          <div className="max-w-7xl mx-auto px-4 md:px-12 py-16 space-y-12 animate-fade-in">
-            
-            {/* Header info */}
-            <div className="border-b border-[#E4E2DC] pb-8 space-y-4">
-              <div className="flex items-center gap-2 text-xs text-[#E05A36] font-bold tracking-widest uppercase">
-                <Sparkles className="h-4 w-4" />
-                <span>Original Brand assets archive</span>
-              </div>
-              <h2 className="font-editorial text-4xl md:text-5xl font-bold text-[#1C1B19]">
-                The 411Designs Blueprint Chest
-              </h2>
-              <p className="font-sans-premium text-sm text-[#5C5A54] max-w-3xl leading-relaxed">
-                We have imported the real, high-resolution visual blueprints, layouts, completed projects, and official logo specs provided directly by Toriora Kofoworola. Clicking any visual card below opens a high-fidelity lightbox viewer with structural descriptions.
-              </p>
-            </div>
-
-            {/* Archives Grid Layout */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {ARCHIVE_IMAGES.map((img) => (
-                <div 
-                  key={img.id} 
-                  className="group bg-white border border-[#E4E2DC] rounded overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer"
-                  onClick={() => openLightbox(img.path, img.title, img.description)}
-                >
-                  <div className="aspect-[4/3] bg-[#EBE9E2] relative overflow-hidden flex items-center justify-center">
-                    <img 
-                      src={img.path} 
-                      alt={img.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="bg-white text-black px-4 py-2 text-xs font-bold uppercase tracking-wider rounded shadow flex items-center gap-2">
-                        <Maximize2 className="h-3 w-3" />
-                        Explore Spec
-                      </div>
-                    </div>
-                    <div className="absolute top-4 left-4 bg-black/80 text-white text-[9px] uppercase tracking-widest font-bold px-2 py-1 rounded">
-                      {img.category}
-                    </div>
-                  </div>
-                  <div className="p-5 space-y-2">
-                    <span className="text-[10px] font-sans-premium font-bold text-[#E05A36] uppercase tracking-widest">Image #{img.id + 1}</span>
-                    <h3 className="font-editorial text-lg font-bold text-[#1C1B19] group-hover:text-[#E05A36] transition-colors">{img.title}</h3>
-                    <p className="text-xs text-[#5C5A54] leading-relaxed line-clamp-2">{img.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Highlighted Note */}
-            <div className="bg-white border border-[#E4E2DC] p-6 rounded flex items-center gap-4 max-w-2xl mx-auto">
-              <div className="h-10 w-10 bg-[#E05A36]/10 text-[#E05A36] rounded-full flex items-center justify-center shrink-0">
-                <Check className="h-5 w-5" />
-              </div>
-              <p className="text-xs font-sans-premium text-[#5C5A54] leading-relaxed">
-                <strong>Authentic Visual Caching:</strong> This list stores the original assets. We have verified every component layout against these blueprints to assure perfect, bespoke, and professional fidelity.
-              </p>
-            </div>
-
-          </div>
-        )}
+        </div>
 
       </main>
 
       {/* Lightbox Modal Component */}
       {lightboxImage && (
-        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-8 animate-fade-in">
+        <div
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex flex-col items-center justify-center p-4 md:p-8 animate-fade-in"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="lightbox-title"
+          tabIndex={-1}
+        >
           
           {/* Close trigger */}
           <button 
+            ref={lightboxCloseButtonRef}
             onClick={() => setLightboxImage(null)}
             className="absolute top-6 right-6 text-white/70 hover:text-white bg-white/10 hover:bg-white/20 p-2.5 rounded-full transition-colors focus:outline-none z-10"
+            aria-label="Close image preview"
             title="Close Lightbox"
           >
             <X className="h-6 w-6" />
@@ -1349,7 +1211,7 @@ export default function App() {
 
             {/* Informational writeup */}
             <div className="text-center max-w-2xl text-white space-y-2 pt-2">
-              <h3 className="font-editorial text-2xl md:text-3xl font-bold text-white">{lightboxTitle}</h3>
+              <h3 id="lightbox-title" className="font-editorial text-2xl md:text-3xl font-bold text-white">{lightboxTitle}</h3>
               <p className="text-xs md:text-sm text-[#A9C4B4] leading-relaxed">{lightboxDesc}</p>
               
               <div className="pt-4 flex items-center justify-center gap-2 text-[10px] text-white/50 tracking-widest uppercase font-bold">
@@ -1398,9 +1260,9 @@ export default function App() {
               <a href="#studio" className="hover:text-[#E05A36] transition-colors py-0.5">01 Studio Ethos</a>
               <a href="#capabilities" className="hover:text-[#E05A36] transition-colors py-0.5">02 Capabilities</a>
               <a href="#projects" className="hover:text-[#E05A36] transition-colors py-0.5">03 Selected Work</a>
-              <a href="#process" className="hover:text-[#E05A36] transition-colors py-0.5">04 Execution Process</a>
-              <a href="#about" className="hover:text-[#E05A36] transition-colors py-0.5">05 About Toriora</a>
-              <a href="#contact" className="hover:text-[#E05A36] transition-colors py-0.5">06 Collaboration Form</a>
+              <a href="#process" className="hover:text-[#E05A36] transition-colors py-0.5">05 Execution Process</a>
+              <a href="#about" className="hover:text-[#E05A36] transition-colors py-0.5">06 About Toriora</a>
+              <a href="#contact" className="hover:text-[#E05A36] transition-colors py-0.5">08 Collaboration Form</a>
             </div>
           </div>
 
@@ -1417,6 +1279,7 @@ export default function App() {
                   rel="noreferrer" 
                   className="h-10 w-10 rounded bg-white/5 border border-white/10 hover:border-[#E05A36] hover:bg-[#E05A36] flex items-center justify-center text-white transition-all"
                   title="WhatsApp"
+                  aria-label="WhatsApp"
                 >
                   <Phone className="h-4 w-4" />
                 </a>
@@ -1424,6 +1287,7 @@ export default function App() {
                   href="mailto:The411Designs@gmail.com" 
                   className="h-10 w-10 rounded bg-white/5 border border-white/10 hover:border-[#E05A36] hover:bg-[#E05A36] flex items-center justify-center text-white transition-all"
                   title="Email"
+                  aria-label="Email"
                 >
                   <Mail className="h-4 w-4" />
                 </a>
@@ -1433,6 +1297,7 @@ export default function App() {
                   rel="noreferrer" 
                   className="h-10 w-10 rounded bg-white/5 border border-white/10 hover:border-[#E05A36] hover:bg-[#E05A36] flex items-center justify-center text-white transition-all"
                   title="Instagram"
+                  aria-label="Instagram"
                 >
                   <Instagram className="h-4 w-4" />
                 </a>
