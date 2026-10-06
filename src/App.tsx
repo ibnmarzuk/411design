@@ -84,14 +84,14 @@ const ARCHIVE_IMAGES = [
   },
   {
     id: 9,
-    path: '/input_file_9.png',
+    path: '/411designs-logo.svg',
     title: 'The 411Designs Logo (Green Studio Spec)',
     description: 'Official brand mark watermark containing architectural lines, structural geometry, and green tones.',
     category: 'Brand Logo'
   },
   {
     id: 10,
-    path: '/input_file_10.png',
+    path: '/411designs-logo.svg',
     title: 'The 411Designs Logo (Bronze Luxury Spec)',
     description: 'Official luxury spec logo in warm gold/bronze. Used for the favicon, watermarks, and high-end print representations.',
     category: 'Brand Logo'
@@ -162,9 +162,7 @@ export default function App() {
           
           {/* Zone 1: Single element brand wordmark */}
           <a href="#" onClick={() => setViewMode('showroom')} className="flex items-center gap-3 group focus:outline-none">
-            <span className="font-editorial text-xl md:text-2xl font-bold tracking-tight text-[#1C1B19] group-hover:text-[#E05A36] transition-colors">
-              4•11 <span className="font-sans-premium text-xs tracking-widest text-[#7C7A74] ml-1 font-semibold">DESIGNS</span>
-            </span>
+            <img src="/411designs-logo.svg" alt="The 411Designs" className="h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
           </a>
 
           {/* Zone 2: Navigation Links */}
@@ -243,8 +241,8 @@ export default function App() {
             <section className="relative overflow-hidden bg-[#F7F5F0] py-16 lg:py-24 border-b border-[#E4E2DC]">
               {/* Seamless blended brand logo watermark in background */}
               <div 
-                className="absolute right-[-10%] top-[-10%] h-[80%] w-[60%] opacity-[0.04] select-none pointer-events-none mix-blend-multiply invert bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_10.png")' }}
+                className="absolute right-[-5%] top-0 h-[95%] w-[58%] opacity-[0.07] select-none pointer-events-none mix-blend-multiply bg-no-repeat bg-contain"
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -301,7 +299,7 @@ export default function App() {
                     <div className="h-40 w-full flex items-center justify-center relative my-4">
                       {/* Subtly animated large brand logo */}
                       <img 
-                        src="/input_file_10.png" 
+                        src="/411designs-logo.svg"
                         alt="The 411Designs Bronze Logo" 
                         className="h-full w-auto object-contain mix-blend-screen scale-110 group-hover:scale-115 transition-transform duration-[1.5s]"
                       />
@@ -334,8 +332,8 @@ export default function App() {
             <section id="studio" className="py-20 bg-[#F5F2EB] border-b border-[#E4E2DC] relative overflow-hidden">
               {/* Seamless blended brand logo watermark in background */}
               <div 
-                className="absolute left-[-10%] top-[-10%] h-[80%] w-[60%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply invert bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_9.png")' }}
+                className="absolute left-[-10%] top-[-10%] h-[80%] w-[60%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply bg-no-repeat bg-contain"
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
@@ -386,7 +384,7 @@ export default function App() {
                       <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Official Green Studio Spec</span>
                       <div className="h-28 w-full flex items-center justify-center">
                         <img 
-                          src="/input_file_9.png" 
+                          src="/411designs-logo.svg"
                           alt="The 411Designs Green Logo" 
                           className="h-full w-auto object-contain mix-blend-screen group-hover:scale-105 transition-transform duration-700"
                         />
@@ -538,8 +536,8 @@ export default function App() {
             <section id="projects" className="py-24 bg-[#F5F2EB] relative border-b border-[#E4E2DC] overflow-hidden">
               {/* Seamless blended brand logo watermark in background of Selected Work */}
               <div 
-                className="absolute left-[5%] bottom-[-5%] h-[50%] w-[30%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply invert bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_9.png")' }}
+                className="absolute left-[5%] bottom-[-5%] h-[50%] w-[30%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply bg-no-repeat bg-contain"
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
@@ -828,7 +826,7 @@ export default function App() {
               {/* Subtle watermark in Process quote */}
               <div 
                 className="absolute right-[-5%] bottom-[-5%] h-[60%] w-[40%] opacity-[0.02] select-none pointer-events-none mix-blend-screen bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_10.png")' }}
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               {/* Large statement quotation panel */}
@@ -863,7 +861,7 @@ export default function App() {
                     <div className="aspect-[4/3] rounded border border-white/10 p-6 bg-white/5 shadow-inner flex flex-col justify-between">
                       <span className="text-[10px] text-white/30 uppercase tracking-widest font-bold">Studio Workshop Spec</span>
                       <div className="h-28 w-full flex items-center justify-center opacity-40">
-                        <img src="/input_file_10.png" alt="The 411Designs Bronze Logo" className="h-full w-auto object-contain mix-blend-screen" />
+                        <img src="/411designs-logo.svg" alt="The 411Designs" className="h-full w-auto object-contain mix-blend-screen" />
                       </div>
                       <span className="text-[10px] text-center text-white/30 tracking-widest uppercase font-bold">Est. Ilorin / Osogbo</span>
                     </div>
@@ -938,8 +936,8 @@ export default function App() {
             <section id="about" className="py-24 bg-[#F5F2EB] border-b border-[#E4E2DC] relative overflow-hidden">
               {/* Seamless blended brand logo watermark in background of Founder Profile */}
               <div 
-                className="absolute right-[-10%] top-[-10%] h-[80%] w-[60%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply invert bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_9.png")' }}
+                className="absolute right-[-10%] top-[-10%] h-[80%] w-[60%] opacity-[0.03] select-none pointer-events-none mix-blend-multiply bg-no-repeat bg-contain"
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
@@ -1077,7 +1075,7 @@ export default function App() {
               {/* Logo Watermark Subtly Positioned in Form Section Background */}
               <div 
                 className="absolute left-[-5%] top-[10%] h-[70%] w-[45%] opacity-[0.03] select-none pointer-events-none mix-blend-screen bg-no-repeat bg-contain"
-                style={{ backgroundImage: 'url("/input_file_9.png")' }}
+                style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
               />
 
               <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-16 relative z-10">
@@ -1372,7 +1370,7 @@ export default function App() {
         {/* Subtle decorative brand pattern derived from actual logo in footer */}
         <div 
           className="absolute right-[-10%] bottom-[-10%] h-[80%] w-[50%] opacity-[0.02] select-none pointer-events-none mix-blend-screen bg-no-repeat bg-contain"
-          style={{ backgroundImage: 'url("/input_file_10.png")' }}
+          style={{ backgroundImage: 'url("/411designs-logo.svg")' }}
         />
 
         <div className="max-w-7xl mx-auto px-4 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12 relative z-10">
@@ -1380,9 +1378,7 @@ export default function App() {
           {/* Column 1: Identity */}
           <div className="md:col-span-5 space-y-6">
             <div className="flex items-center gap-3">
-              <span className="font-editorial text-2xl font-bold tracking-tight text-white">
-                4•11 <span className="font-sans-premium text-xs tracking-widest text-[#9C9A94] ml-1 font-semibold">DESIGNS</span>
-              </span>
+              <img src="/411designs-logo.svg" alt="The 411Designs" className="h-16 w-auto object-contain" />
             </div>
             
             <p className="font-sans-premium text-xs text-[#A9C4B4] leading-relaxed max-w-sm">

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 760" role="img" aria-labelledby="title">
+  <title id="title">The 411Designs</title>
+  <g fill="none" stroke="#9b704f" stroke-linecap="square">
+    <path d="M174 526 448 79M172 693 463 166M189 657 462 211M205 623 463 256M222 590 463 302M239 558 463 348M257 526 463 393M274 494 463 438M292 462 463 483" stroke-width="2" opacity=".55"/>
+    <path d="M390 350 602 179M407 378 618 208M424 407 634 239M441 436 649 269M458 465 664 300M475 494 679 331M492 523 695 361M509 552 710 392M526 581 726 423" stroke-width="2" opacity=".42"/>
+    <path d="M507 102v81M507 246v273M632 214v353" stroke-width="2" opacity=".6"/>
+  </g>
+  <g fill="#9b704f">
+    <path d="M174 513 431 96 462 105 462 501 430 501 430 191 350 322 350 526 430 526 430 550 350 550 350 687 320 687 320 550 174 550Zm38 13h108V350Z"/>
+    <path d="m468 365 108-177 30 8v370h-30V254l-82 134Zm-5 211h173v23H463Z"/>
+    <path d="M320 512h30v175h-30zM430 500h30v18h-30z"/>
+    <circle cx="507" cy="182" r="8"/><circle cx="507" cy="214" r="16"/><circle cx="507" cy="246" r="9"/>
+    <circle cx="632" cy="251" r="8"/><circle cx="632" cy="283" r="16"/><circle cx="632" cy="315" r="9"/>
+  </g>
+  <g fill="#9b704f" font-family="Arial, Helvetica, sans-serif" font-weight="700">
+    <text x="236" y="281" font-size="68" letter-spacing="-2">The</text>
+    <text x="373" y="662" font-size="82" letter-spacing="-5">Designs</text>
+  </g>
+</svg>
