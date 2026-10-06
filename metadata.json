@@ -1,0 +1,6 @@
+{
+  "name": "The 411Designs",
+  "description": "Official digital showroom for The 411Designs, premium Nigerian furniture production and interior design studio led by Toriora Kofoworola.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
